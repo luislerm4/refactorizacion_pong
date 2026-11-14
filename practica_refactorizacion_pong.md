@@ -326,12 +326,20 @@ La calificación final será la suma de los puntos obtenidos en cada criterio.
 Incluya en el reporte técnico respuestas a las siguientes preguntas:
 
 1. ¿Qué problemas puede ocasionar modificar el estado de un componente Swing desde un hilo diferente al EDT?
+- Inconsistencia visual y excepciones: Swing no es seguro para hilos (thread-safe). Modificar componentes gráficos (como posición o repintado) desde un hilo que no sea el EDT (Event Dispatch Thread) puede provocar corrupción de datos internos, bloqueos (deadlocks) o que la interfaz no se actualice correctamente en pantalla.
 2. ¿Por qué `Thread.yield()` no constituye una solución adecuada para implementar una pausa?
+- Falta de control de tiempo: Thread.yield() solo sugiere al planificador del sistema operativo que ceda el uso temporal del procesador a otro hilo con la misma prioridad. No garantiza una pausa real, consume ciclos de CPU innecesariamente (bucle activo) y el tiempo de espera es completamente impredecible.
 3. ¿Qué ventajas y limitaciones ofrece `javax.swing.Timer` frente a una implementación basada en `Thread`?
+- Ventajas: Ejecuta las acciones directamente en el EDT de manera segura y sincronizada con el ciclo de vida gráfico, evitando la necesidad de usar SwingUtilities.invokeLater().
+- Limitaciones: No es adecuado para tareas de procesamiento pesado o cálculos complejos, ya que si el código dentro del evento tarda demasiado en ejecutarse, se congela la interfaz gráfica.
 4. ¿Cómo influye la magnitud del desplazamiento de la pelota en la precisión de la detección de colisiones?
+- Efecto túnel (Tunneling): Si la velocidad de la pelota es muy alta y su desplazamiento por cuadro es mayor que el grosor de la paleta o el borde, la pelota puede "atravesar" el objeto de un fotograma a otro sin que el sistema detecte la intersección, fallando la colisión.
 5. ¿Qué beneficios aporta separar la lógica del juego de su representación gráfica?
+- Mantenibilidad y pruebas: Permite probar las reglas del juego, colisiones y estados mediante pruebas unitarias automatizadas (como JUnit) sin necesidad de inicializar una ventana gráfica o un entorno visual, haciendo el código más limpio y modular.
 6. ¿Cómo ayudan las pruebas automatizadas a reducir el riesgo de introducir defectos durante una refactorización?
+- Red de seguridad inmediata: Ofrecen retroalimentación instantánea. Al modificar la estructura interna del código, ejecutar las pruebas permite confirmar en segundos si se rompió alguna regla de negocio o funcionalidad existente sin tener que probar el juego manualmente paso a paso.
 7. ¿Qué aspectos del diseño actual dificultarían agregar un segundo jugador, un marcador o diferentes niveles de dificultad?
+- Acoplamiento de estado: Si las variables del juego (posición de paletas, puntajes, velocidad) están dispersas o hardcodeadas dentro de las clases de la interfaz gráfica (Board), extender la lógica para múltiples entidades o modificar variables globales requiere reestructurar gran parte del código existente.
 
 ## 9. Resultado esperado
 
