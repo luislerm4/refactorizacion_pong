@@ -51,12 +51,30 @@ Examine las clases `Main`, `Board`, `BallRunner` y `Paddle`.
 Realice las siguientes tareas:
 
 1. Identifique las responsabilidades de cada clase.
+
+`Main`: Configura y abre la ventana principal (JFrame) y añade el tablero de juego.
+`Board`: Dibuja los elementos visuales (paintComponent), captura las teclas del usuario y ejecuta el hilo de repintado.
+`BallRunner`: Mueve la pelota en un hilo independiente, calculando rebotes y colisiones.   
+`Paddle`: Controla la posición y el movimiento horizontal de la raqueta.
 2. Localice los métodos que actualizan el estado del juego.
+- El hilo de BallRunner actualiza las coordenadas de la pelota en cada ciclo.
+- Board captura los eventos del teclado para mover la raqueta o pausar el juego.  
+- Los métodos moveLeft() y moveRight() de Paddle actualizan la posición horizontal de la raqueta.
 3. Determine qué objetos y variables son compartidos entre hilos.
+- La pelota (ball) y la raqueta (paddle) son modificadas por el hilo de la pelota y leídas por el hilo gráfico sin sincronización estricta.
+- Las banderas de control (isPaused, stop) se modifican desde el teclado pero se leen en otro hilo sin el modificador volatile.
 4. Analice cómo se implementan las operaciones de pausa y reanudación.
+  - Al presionar la barra espaciadora, Board y BallRunner activan su bandera isPaused.  
+- El hilo de la pelota entra en pausa usando Thread.yield() hasta que se presiona la tecla R para reanudar.
 5. Identifique las instrucciones responsables de la detección de colisiones.
+  - Se realiza dentro de BallRunner.run().
+- Utiliza paddle.intersects(ball) para el choque con la raqueta y comparaciones numéricas con MAX_X/MAX_Y para los bordes.
 6. Determine cómo se inicia y termina la ejecución de los hilos.
-7. Identifique posibles violaciones al principio de responsabilidad única (SRP).
+- Ambos hilos se inician con .start() en el constructor de Board.  
+- Problema: No cierran de forma ordenada, el hilo gráfico usa un ciclo while(true) infinito y el método de parada de la pelota nunca se invoca.
+7. Identifique posibles violaciones al principio de responsabilidad única (SRP). 
+- Board mezcla la interfaz gráfica, el bucle de renderizado y el manejo de eventos.
+- BallRunner mezcla las físicas del juego con la gestión directa del hilo.
 
 **Entregable parcial:** una tabla de diagnóstico con al menos cinco problemas identificados, su ubicación, consecuencias y propuesta de solución.
 
