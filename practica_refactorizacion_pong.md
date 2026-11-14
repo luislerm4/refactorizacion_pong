@@ -108,10 +108,15 @@ Revise las operaciones que modifican o consultan la posición de la pelota, la r
 Implemente las modificaciones necesarias para:
 
 1. Evitar condiciones de carrera.
+- Al usar javax.swing.Timer, todas las actualizaciones del juego y el redibujado ocurren de forma secuencial dentro del mismo hilo (el EDT), por lo que no hay hilos compitiendo por modificar los mismos datos al mismo tiempo.
 2. Garantizar la visibilidad de los cambios de estado entre hilos, cuando corresponda.
+- Como todo opera en el EDT de Swing, los cambios en los estados del juego se reflejan de forma inmediata y síncrona sin problemas de memoria caché.
 3. Evitar modificaciones simultáneas no coordinadas de los objetos del juego.
+- El temporizador de Swing garantiza de forma nativa que las operaciones gráficas y de lógica se ejecuten de manera segura en el Event Dispatch Thread.
 4. Realizar las actualizaciones de los componentes Swing en el EDT.
+- Las modificaciones de la interfaz, el manejo de eventos de teclado y los llamados al método repaint() se ejecutan de forma nativa dentro del Event Dispatch Thread (EDT), cumpliendo estrictamente con las reglas de concurrencia de Swing.
 5. Separar las operaciones de actualización del estado y representación gráfica.
+- Se estructuró el código para que el método updateGameLogic() maneje exclusivamente las físicas y coordenadas, mientras que paintComponent() se encarga únicamente de dibujar los elementos visuales en pantalla.
 
 **Consideración:** si se utiliza `javax.swing.Timer` y todas las modificaciones del estado del juego se realizan en el EDT, no será necesario incorporar sincronización adicional para ese estado.
 
