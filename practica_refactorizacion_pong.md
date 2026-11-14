@@ -131,12 +131,19 @@ Analice el algoritmo actual, particularmente el desplazamiento en incrementos de
 Implemente las siguientes mejoras:
 
 - Representar la posición y velocidad de la pelota mediante valores numéricos apropiados.
+  `Se utilizaron tipos de datos numéricos precisos (double para las coordenadas ballX y ballY, e int para los incrementos y velocidades DX y DY), permitiendo un control matemático fluido y sin saltos bruscos.`
 - Separar la velocidad horizontal de la vertical.
+  `Se mantuvieron y aislaron los incrementos de desplazamiento horizontal (DX) y vertical (DY) respecto a sus respectivas direcciones (directionX y directionY), lo que permite que la pelota se mueva con vectores independientes en cada eje.`
 - Detectar correctamente las colisiones con los límites laterales y superior del tablero.
+  `Las comprobaciones validan de manera exacta los bordes utilizando las funciones geométricas del objeto (ball.getMinX(), ball.getMaxX(), y ball.getMinY()), asegurando que el rebote ocurra justo en el perímetro del área de juego.`
 - Detectar la colisión con la raqueta considerando sus dimensiones reales.
+  `Se hace uso del método paddle.intersects(ball), el cual contrasta las dimensiones y la envolvente geométrica real del rectángulo de la raqueta frente a la figura circular de la pelota.`
 - Evitar que la pelota atraviese la raqueta debido a incrementos grandes de posición.
+  `Se redujo el incremento de velocidad a una tasa más fina (5 píxeles por ciclo) y se implementó un ajuste correctivo de posición al impactar (ballY = paddle.getPaddle().getMinY() - ball.height), asegurando que la pelota repose exactamente sobre la superficie superior de la raqueta sin cruzarla.`
 - Evitar que una misma colisión produzca múltiples inversiones consecutivas de velocidad.
+  `Al aplicar una realineación fija inmediata de las coordenadas al momento del impacto (por ejemplo, fijando los límites exactos de los bordes o reposicionando la pelota sobre la raqueta), se evita que la pelota se quede "atrapada" invirtiendo su dirección de forma repetida en ciclos contiguos.`
 - Definir explícitamente qué ocurre cuando la pelota supera el límite inferior del tablero.
+  `Se estableció una condición clara: si la pelota rebasa el límite inferior del tablero (MAX_Y), se considera una "pelota perdida", por lo que sus coordenadas se reinician automáticamente al centro de la pantalla (X = 320, Y = 240) y se redirige hacia arriba.`
 
 La lógica de colisiones deberá considerar el tamaño de la pelota y no únicamente la posición de su origen.
 

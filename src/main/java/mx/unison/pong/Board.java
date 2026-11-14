@@ -18,12 +18,12 @@ public class Board extends JComponent implements KeyListener, ActionListener {
 
     public static final int MAX_X = 640;
     public static final int MAX_Y = 480;
-    public static final int DX = 20;
-    public static final int DY = 20;
-    public static final int SIGN = -1;
 
-    private int ballX = 320;
-    private int ballY = 240;
+    public static final int DX = 5;
+    public static final int DY = 5;
+
+    private double ballX = 320;
+    private double ballY = 240;
     private int directionX = 1;
     private int directionY = 1;
 
@@ -35,7 +35,7 @@ public class Board extends JComponent implements KeyListener, ActionListener {
         ball = new Ellipse2D.Double(ballX, ballY, 20, 20);
         paddle = new Paddle();
 
-        gameTimer = new Timer(150, this);
+        gameTimer = new Timer(30, this);
         gameTimer.start();
     }
 
@@ -48,17 +48,35 @@ public class Board extends JComponent implements KeyListener, ActionListener {
     }
 
     private void updateGameLogic() {
-        if (paddle.intersects(ball)) {
-            directionY = directionY * SIGN;
+        ballX += DX * directionX;
+        ballY += DY * directionY;
+        ball.x = ballX;
+        ball.y = ballY;
+
+        if (ball.getMinX() <= 0) {
+            directionX = 1;
+            ballX = 0;
+        } else if (ball.getMaxX() >= MAX_X) {
+            directionX = -1;
+            ballX = MAX_X - ball.width;
         }
 
-        if (ball.getMinY() < 0) { directionY = directionY * SIGN; }
-        if (ball.getMinX() < 0) { directionX = directionX * SIGN; }
-        if (ball.getMaxY() > MAX_Y) { directionY = directionY * SIGN; }
-        if (ball.getMaxX() > MAX_X) { directionX = directionX * SIGN; }
+        if (ball.getMinY() <= 0) {
+            directionY = 1;
+            ballY = 0;
+        }
 
-        ballX = ballX + (DX * directionX);
-        ballY = ballY + (DY * directionY);
+        if (paddle.intersects(ball)) {
+            directionY = -1;
+            ballY = paddle.getPaddle().getMinY() - ball.height;
+        }
+
+        if (ball.getMinY() >= MAX_Y) {
+            ballX = 320;
+            ballY = 240;
+            directionY = -1;
+        }
+
         ball.x = ballX;
         ball.y = ballY;
     }
