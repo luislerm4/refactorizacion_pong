@@ -155,13 +155,13 @@ La lógica de colisiones deberá considerar el tamaño de la pelota y no únicam
 
 Refactorice el proyecto para distinguir claramente las siguientes responsabilidades:
 
-| Responsabilidad | Descripción |
-|---|---|
-| Modelo del juego | Mantener el estado, posiciones y velocidades. |
-| Lógica del juego | Actualizar posiciones y detectar colisiones. |
-| Renderizado | Dibujar el tablero y los objetos gráficos. |
-| Control de entrada | Interpretar las acciones del teclado. |
-| Control de ejecución | Administrar inicio, pausa, reanudación y terminación. |
+| Responsabilidad | Descripción | Componente/Clase asociada |
+|---|---|---------------------------|
+| Modelo del juego | Mantener el estado, posiciones y velocidades. |Paddle (posición y dimensiones de la raqueta) y las coordenadas de la pelota (ballX, ballY). |
+| Lógica del juego | Actualizar posiciones y detectar colisiones. | Método updateGameLogic() dentro de la clase Board (cálculo de vectores, rebotes y choques). |
+| Renderizado | Dibujar el tablero y los objetos gráficos. | Método paintComponent() dentro de la clase Board (responsable únicamente de pintar sin modificar datos). |
+| Control de entrada | Interpretar las acciones del teclado. | Métodos keyPressed() de la interfaz KeyListener implementada en Board (flechas, espacio, tecla R). | 
+| Control de ejecución | Administrar inicio, pausa, reanudación y terminación. | El javax.swing.Timer y el enum GameState (RUNNING, PAUSED, STOPPED), coordinados con el cierre de la ventana en Main. |
 
 No es obligatorio implementar una arquitectura MVC completa. Sin embargo, la solución deberá demostrar una separación razonable entre la lógica del juego y su representación gráfica.
 
